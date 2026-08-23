@@ -24,7 +24,7 @@ jobs:
           make -j$(nproc) O=out ARCH=arm64 CC=clang
 
       - name: Upload Kernel Image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Kernel-Image
           path: out/arch/arm64/boot/Image.gz*
