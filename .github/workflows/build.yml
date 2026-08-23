@@ -8,20 +8,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Build Environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential bc bison flex libssl-dev libncurses-dev git zip clang llvm
+          sudo apt-get install -y build-essential bc bison flex libssl-dev libncurses-dev git zip libelf-dev
+
+      - name: Download Clang Toolchain
+        run: |
+          mkdir clang
+          git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
 
       - name: Compile Kernel
         run: |
           mkdir out
           export ARCH=arm64
           export SUBARCH=arm64
+          export PATH="$(pwd)/clang/bin:$PATH"
+          
           make O=out ARCH=arm64 fog-stock_defconfig
-          make -j$(nproc) O=out ARCH=arm64 CC=clang
+          make -j$(nproc) O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
 
       - name: Upload Kernel Image
         uses: actions/upload-artifact@v4
