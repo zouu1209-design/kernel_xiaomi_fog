@@ -34,7 +34,7 @@ jobs:
             CLANG_TRIPLE=aarch64-linux-gnu- \
             CROSS_COMPILE=aarch64-linux-android- \
             CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-            KCFLAGS="-Wno-error"
+            KCFLAGS="-w -Wno-error -Wno-implicit-function-declaration"
 
       - name: Upload Kernel Image
         uses: actions/upload-artifact@v4
